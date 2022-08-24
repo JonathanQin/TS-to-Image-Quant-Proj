@@ -7,16 +7,12 @@ import matplotlib.pyplot as plt
 #import quantsc as Qsc
 
 def dataPreprocessing(data):
+    
     """
-    data = np.array(data)
-    data = np.round(data, 2)
-    print(data, data.shape)
-    dataVisualization(data)
+    Transpose the data
+    Action: Remove after hours trading datapoints
+    Action: Normalize data values to [-1:1]
     """
-    #data.plot()
-    #print(data.size)
-    #print(data)
-
     data_T = data.transpose() #or data.T
     print(data_T)
     dataVisualization(data_T)
