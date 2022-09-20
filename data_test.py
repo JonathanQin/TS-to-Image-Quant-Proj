@@ -26,12 +26,33 @@ def dataPreprocessing(data):
     data = data[data['DateTime'].dt.weekday < 5].reset_index(drop=True)
     
     #remove after hours
-
     #remove holidays
         
     #tranpose, columns become indices
     data_T = data.transpose() #or data.T    
-    dataVisualization(data_T)
+    #dataVisualization(data_T) #visualization of raw data
+    print(data_T)
+    normalize(data_T)
+    
+def normalize(data):
+    """
+    normalize values between [-1 1]
+
+    Args:
+        data (df): dataframe of time series
+    """
+    pmax = data.max(axis = 1)
+    pmin = data.min(axis = 1)
+    print(pmax[1], pmin[1])
+    #print(data.columns.size)
+    for i in range(data.columns.size):
+        price = data.iloc[1][i]
+        data.iloc[1][i] = (2*price - pmax[1] - pmin[1]) / (pmax[1] - pmin[1])
+        if(data.iloc[1][i]>1):
+            print(i, data.iloc[1][i])
+    dataVisualization(data)
+
+    
     
 def gramianAngularField():
     pass
@@ -54,13 +75,13 @@ def dataVisualization(data):
     x = data.loc[data.index[0], :]
     y = data.loc[data.index[1], :]
     
-    plt.plot(x, y)
+    plt.scatter(x, y)
     plt.show()
     
 
 def main():
     stock_list = ['SPY', 'PFE', 'AAPL']
-    data = yf.download(stock_list, start = "2012-8-16", end = "2022-8-20", interval= "1d")
+    data = yf.download(stock_list, start = "2022-8-16", end = "2022-8-20", interval= "1h")
     df = pd.DataFrame(data)
     df_prices = df.loc[:, "Adj Close"] #can also use df.drop(["unwanted columns"])
     #print(df.index) #gives a pd series of df index, not considered a column in tranposition
